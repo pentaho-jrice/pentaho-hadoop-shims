@@ -52,6 +52,7 @@ import java.util.Date;
 public class AvroConverter {
   private static final String DEFAULT_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss.SSS";
   private static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy/MM/dd HH:mm:ss.SSS";
+  private static final SimpleDateFormat DEFAULT_DATE_PATTERN = new SimpleDateFormat( DEFAULT_DATE_FORMAT );
   private static final String DEFAULT_NUMBEW_FORMAT = "";
   private static final String DEFAULT_INTEGER_FORMAT = "";
   private static final String DEFAULT_BIG_DECIMAL_FORMAT = "";
@@ -247,7 +248,6 @@ public class AvroConverter {
 
   protected static Object convertFromStringMetaInterface( int targetValueMetaInterface, Object value ) {
     Object returnVal = value;
-    SimpleDateFormat datePattern = new SimpleDateFormat( DEFAULT_DATE_FORMAT );
 
     if ( value == null ) {
       return value;
@@ -285,11 +285,11 @@ public class AvroConverter {
           returnVal = new BigDecimal( doubleValue );
           break;
         case ValueMetaInterface.TYPE_TIMESTAMP:
-          returnVal = new Timestamp( ( datePattern.parse( (String) value ) ).getTime() );
+          returnVal = new Timestamp( ( DEFAULT_DATE_PATTERN.parse( (String) value ) ).getTime() );
 
           break;
         case ValueMetaInterface.TYPE_DATE:
-          returnVal = datePattern.parse( (String) value );
+          returnVal = DEFAULT_DATE_PATTERN.parse( (String) value );
 
           break;
         case ValueMetaInterface.TYPE_BOOLEAN:
@@ -421,9 +421,9 @@ public class AvroConverter {
       return value;
     }
 
-    // value is expected to be of type String
+    // value is expected to be of type Boolean
     if ( !( value instanceof Boolean ) ) {
-      return handleConversionError( "Error.  Expecting value of type string.    actual value type = '" + value.getClass() + "'.    value = '" + value + "'." );
+      return handleConversionError( "Error.  Expecting value of type Boolean.    actual value type = '" + value.getClass() + "'.    value = '" + value + "'." );
     }
 
     try {
